@@ -1,32 +1,34 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:users_app/models/list_users.dart';
-
-import '../http_service.dart';
+import 'package:get/get.dart';
+import 'package:users_app/controller/list_users_controller.dart';
 
 class Home extends StatelessWidget {
+  final ListUsersController _listUsersController =
+      Get.put(ListUsersController());
   @override
   Widget build(BuildContext context) {
-    HttpService httpServiceObj = HttpService();
     return Scaffold(
       appBar: AppBar(),
-      body: Container(
-        child: FutureBuilder(
-          future: httpServiceObj.getRequest('/users'),
-          builder: (BuildContext context, AsyncSnapshot<Response> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting)
-              return CircularProgressIndicator();
-            final jsonData = snapshot.data;
-            final listUsers = ListUsers.fromJson(jsonData?.data).usersList;
-            return ListView.builder(
-              itemCount: listUsers.length,
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                  title: Text(listUsers[index].firstName ?? ''),
-                );
-              },
-            );
-          },
+      body: Obx(
+        () => Container(
+          child: ListView.builder(
+            itemCount: _listUsersController.usersList.length,
+            itemBuilder: (BuildContext context, int index) {
+              final currentUser = _listUsersController.usersList[index];
+              return ListTile(
+                leading: CircleAvatar(
+                  child: Text((currentUser.firstName?[0] ?? "") +
+                      (currentUser.lastName?[0] ?? "")),
+                ),
+                title: Text(
+                  (currentUser.firstName ?? "") +
+                      " " +
+                      (currentUser.lastName ?? ""),
+                ),
+                subtitle: Text(currentUser.email ?? ""),
+              );
+            },
+          ),
         ),
       ),
     );
