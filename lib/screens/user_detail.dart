@@ -36,7 +36,6 @@ class UserDetail extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Container(
-                    color: Colors.amber[100],
                     height: 50,
                     width: 150,
                     child: Center(
@@ -57,7 +56,6 @@ class UserDetail extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    color: Colors.amber[100],
                     height: 50,
                     width: 150,
                     child: Center(
@@ -83,7 +81,6 @@ class UserDetail extends StatelessWidget {
                 height: 20,
               ),
               Container(
-                color: Colors.amber[100],
                 child: Center(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
