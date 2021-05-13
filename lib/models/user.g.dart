@@ -8,10 +8,10 @@ part of 'user.dart';
 
 User _$UserFromJson(Map<String, dynamic> json) {
   return User(
-    json['id'] as String?,
-    json['email'] as String?,
-    json['first_name'] as String?,
-    json['last_name'] as String?,
+    json['id'] as String,
+    json['email'] as String,
+    json['first_name'] as String,
+    json['last_name'] as String,
     json['created_at'] == null
         ? null
         : DateTime.parse(json['created_at'] as String),

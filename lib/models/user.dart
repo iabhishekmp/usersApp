@@ -23,22 +23,22 @@ class User {
   );
 
   @JsonKey(name: "id")
-  final String? id;
+  final String id;
 
   @JsonKey(name: "email")
-  final String? email;
+  final String email;
 
   @JsonKey(name: "first_name")
-  final String? firstName;
+  final String firstName;
 
   @JsonKey(name: "last_name")
-  final String? lastName;
+  final String lastName;
 
   @JsonKey(name: "created_at")
-  final DateTime? createdAt;
+  final DateTime createdAt;
 
   @JsonKey(name: "updated_at")
-  final DateTime? updatedAt;
+  final DateTime updatedAt;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
   Map<String, dynamic> toJson() => _$UserToJson(this);

@@ -6,7 +6,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:users_app/models/user.dart';
 
 class UsersDBHelper {
-  static Database? _db;
+  static Database _db;
   //Columns
   static const String ID = 'id';
   static const String FNAME = 'first_name';
@@ -19,7 +19,7 @@ class UsersDBHelper {
   static const TABLE = 'Users';
 
   // Get the dataBase
-  Future<Database?> get db async {
+  Future<Database> get db async {
     if (_db != null) {
       return _db;
     }
@@ -50,7 +50,7 @@ class UsersDBHelper {
   //Insert the data into database
   void save(List<User> usersList) async {
     var dbClient = await db;
-    Batch batch = dbClient!.batch();
+    Batch batch = dbClient.batch();
     usersList.forEach((element) {
       batch.insert(TABLE, element.toJson());
     });
@@ -63,7 +63,7 @@ class UsersDBHelper {
     var dbClient = await db;
     //Fetch all the users in json form
     List<Map<String, dynamic>> maps =
-        await dbClient!.query(TABLE, columns: [ID, FNAME, LNAME, EMAIL]);
+        await dbClient.query(TABLE, columns: [ID, FNAME, LNAME, EMAIL]);
     List<User> users = [];
     //Convert the json form into dartObj and add into the list
     if (maps.length > 0) {
@@ -77,11 +77,11 @@ class UsersDBHelper {
   //close the database
   Future close() async {
     var dbClient = await db;
-    dbClient!.close();
+    dbClient.close();
   }
 
   deleteAllRecords() async {
     var dbClient = await db;
-    await dbClient!.rawDelete('DELETE FROM Users');
+    await dbClient.rawDelete('DELETE FROM Users');
   }
 }
