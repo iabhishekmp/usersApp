@@ -103,7 +103,6 @@ class UsersDBHelper {
   Future<String> getNote(String id) async {
     var dbClient = await db;
     var s = await dbClient.rawQuery('SELECT $NOTE FROM $TABLE WHERE $ID="$id"');
-    print("note fetched from the DB and the result is : ${s[0][NOTE]}");
     return s[0][NOTE];
   }
 }

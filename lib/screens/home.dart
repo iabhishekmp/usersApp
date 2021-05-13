@@ -17,7 +17,6 @@ class _HomeState extends State<Home> {
     setState(() {
       isLoading = true;
     });
-    print("myLog: Pagination called!");
     await _listUsersController.addMoreData();
     setState(() {
       isLoading = false;

@@ -34,7 +34,6 @@ class ListUsersController extends GetxController {
 
   Future<int> _getNoOfRowsFromDB() async {
     int sinceCount = await dbClient.getNoOfRows();
-    print("_getNoOfRowsFromDB is called and returning $sinceCount");
     return sinceCount;
   }
 
