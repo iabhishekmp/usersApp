@@ -23,7 +23,9 @@ class ListUsersController extends GetxController {
       () => Get.dialog(Center(child: CircularProgressIndicator()),
           barrierDismissible: false),
     );
-    var resp = await _dio.getRequest('/users');
+    var resp = await _dio.getRequest('/users').catchError((err) {
+      Get.snackbar('Error occure', "Someting wrong with the backend!");
+    });
     if (resp.statusCode == 200) {
       final result = ListUsers.fromJson(resp.data).usersList;
       usersList.value = result;
@@ -35,6 +37,5 @@ class ListUsersController extends GetxController {
 
   void _getusersFromDB() async {
     final usersListFromDB = await dbClient.getUsers();
-    usersListFromDB.forEach((element) => print(element.firstName));
   }
 }
