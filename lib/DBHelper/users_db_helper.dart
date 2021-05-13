@@ -14,6 +14,8 @@ class UsersDBHelper {
   static const String EMAIL = 'email';
   static const String CREATED_AT = 'created_at';
   static const String UPDATED_AT = 'updated_at';
+  static const String NOTE = 'notes';
+
   //Database-Table
   static const DB_NAME = 'users1.db';
   static const TABLE = 'Users';
@@ -44,7 +46,7 @@ class UsersDBHelper {
   // What will happed at the time of creation of database
   _onCreate(Database db, int version) async {
     await db.execute(
-        "CREATE TABLE $TABLE ($ID TEXT PRIMARY KEY, $EMAIL TEXT, $FNAME TEXT, $LNAME TEXT, $CREATED_AT TEXT, $UPDATED_AT TEXT)");
+        "CREATE TABLE $TABLE ($ID TEXT PRIMARY KEY, $EMAIL TEXT, $FNAME TEXT, $LNAME TEXT, $CREATED_AT TEXT, $UPDATED_AT TEXT, $NOTE TEXT DEFAULT '')");
   }
 
   //Insert the data into database
@@ -55,6 +57,13 @@ class UsersDBHelper {
       batch.insert(TABLE, element.toJson());
     });
     await batch.commit();
+  }
+
+  // get the no of rows in database
+  Future<int> getNoOfRows() async {
+    var dbClient = await db;
+    var resp = await dbClient.rawQuery("SELECT COUNT() FROM $TABLE");
+    return resp[0]['COUNT()'];
   }
 
   // Get all the users
@@ -83,5 +92,18 @@ class UsersDBHelper {
   deleteAllRecords() async {
     var dbClient = await db;
     await dbClient.rawDelete('DELETE FROM Users');
+  }
+
+  Future<void> saveNote(String note, String id) async {
+    var dbClient = await db;
+    await dbClient
+        .rawUpdate('UPDATE $TABLE SET $NOTE = "$note" WHERE $ID="$id"');
+  }
+
+  Future<String> getNote(String id) async {
+    var dbClient = await db;
+    var s = await dbClient.rawQuery('SELECT $NOTE FROM $TABLE WHERE $ID="$id"');
+    print("note fetched from the DB and the result is : ${s[0][NOTE]}");
+    return s[0][NOTE];
   }
 }

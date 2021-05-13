@@ -13,29 +13,55 @@ class ListUsersController extends GetxController {
 
   @override
   void onInit() {
-    _apiGetUsersList();
+    _onInitFunc();
     super.onInit();
   }
 
-  void _apiGetUsersList() async {
+  void _onInitFunc() async {
     Future.delayed(
       Duration.zero,
       () => Get.dialog(Center(child: CircularProgressIndicator()),
           barrierDismissible: false),
     );
-    var resp = await _dio.getRequest('/users').catchError((err) {
+    List<User> bucket = await _getusersFromDB();
+    if (bucket.length == 0) {
+      bucket = await _apiGetUsersList();
+      dbClient.save(bucket);
+    }
+    usersList.value = bucket;
+    Get.back();
+  }
+
+  Future<int> _getNoOfRowsFromDB() async {
+    int sinceCount = await dbClient.getNoOfRows();
+    print("_getNoOfRowsFromDB is called and returning $sinceCount");
+    return sinceCount;
+  }
+
+  Future<List<User>> _getusersFromDB() async {
+    final usersListFromDB = await dbClient.getUsers();
+    return usersListFromDB;
+  }
+
+  Future<List<User>> _apiGetUsersList() async {
+    final int sinceCount = await _getNoOfRowsFromDB();
+    var resp = await _dio.getRequest('/users', sinceCount).catchError((err) {
       Get.snackbar('Error occure', "Someting wrong with the backend!");
     });
     if (resp.statusCode == 200) {
       final result = ListUsers.fromJson(resp.data).usersList;
-      usersList.value = result;
-      dbClient.save(result);
+      return result;
     }
-    Get.back();
-    _getusersFromDB();
+    return [];
   }
 
-  void _getusersFromDB() async {
-    final usersListFromDB = await dbClient.getUsers();
+  Future<bool> addMoreData() async {
+    List<User> newData = await _apiGetUsersList();
+    if (newData.length != 0) {
+      usersList.addAll(newData);
+      dbClient.save(newData);
+      return true;
+    }
+    return false;
   }
 }

@@ -17,11 +17,12 @@ class HttpService {
     );
   }
 
-  Future<Response> getRequest(String endPoint) async {
+  Future<Response> getRequest(String endPoint, int sinceCount) async {
     Response response;
 
     try {
-      response = await _dio.get(endPoint);
+      Map<String, dynamic> myQueryParams = {'since': sinceCount};
+      response = await _dio.get(endPoint, queryParameters: myQueryParams);
     } on DioError catch (e) {
       print("Error occured during get request : ${e.message}");
       throw Exception(e.message);
