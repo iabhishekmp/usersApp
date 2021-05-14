@@ -14,7 +14,7 @@ class UsersDBHelper {
   static const String EMAIL = 'email';
   static const String CREATED_AT = 'created_at';
   static const String UPDATED_AT = 'updated_at';
-  static const String NOTE = 'notes';
+  static const String NOTE = 'note';
 
   //Database-Table
   static const DB_NAME = 'users1.db';
@@ -72,7 +72,7 @@ class UsersDBHelper {
     var dbClient = await db;
     //Fetch all the users in json form
     List<Map<String, dynamic>> maps =
-        await dbClient.query(TABLE, columns: [ID, FNAME, LNAME, EMAIL]);
+        await dbClient.query(TABLE, columns: [ID, FNAME, LNAME, EMAIL, NOTE]);
     List<User> users = [];
     //Convert the json form into dartObj and add into the list
     if (maps.length > 0) {

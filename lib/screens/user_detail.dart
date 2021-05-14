@@ -1,11 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:users_app/controller/user_detail_controller.dart';
+import 'package:users_app/controller/list_users_controller.dart';
+// import 'package:users_app/controller/user_detail_controller.dart';
 import 'package:users_app/models/user.dart';
 
-class UserDetail extends StatelessWidget {
+class UserDetail extends StatefulWidget {
+  @override
+  _UserDetailState createState() => _UserDetailState();
+}
+
+class _UserDetailState extends State<UserDetail> {
   final User currentuser = Get.arguments;
-  final UserDetailControler _userDetailControler = UserDetailControler();
+  var noteFromDB = "";
+
+  final ListUsersController _listUsersController = Get.find();
+
+  void _saveNote() {
+    _listUsersController.saveNoteInDB(currentuser.id);
+  }
+
+  @override
+  void initState() {
+    _listUsersController.getNoteFromDB(currentuser.id);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,24 +121,17 @@ class UserDetail extends StatelessWidget {
               ),
               Container(
                 width: 300,
-                child: FutureBuilder(
-                  future: _userDetailControler.getNoteFromDB(),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    return snapshot.connectionState == ConnectionState.waiting
-                        ? Center(child: CircularProgressIndicator())
-                        : TextFormField(
-                            initialValue: _userDetailControler.userNote.value,
-                            onChanged: (val) {
-                              _userDetailControler.updateUserNote(val);
-                            },
-                            maxLines: 3,
-                            keyboardType: TextInputType.multiline,
-                            decoration: InputDecoration(
-                              hintText: "Enter Text here...",
-                              labelText: "Bio",
-                            ),
-                          );
+                child: TextFormField(
+                  initialValue: currentuser.note,
+                  onChanged: (val) {
+                    _listUsersController.updateUserNote(val);
                   },
+                  maxLines: 3,
+                  keyboardType: TextInputType.multiline,
+                  decoration: InputDecoration(
+                    hintText: "Enter Text here...",
+                    labelText: "Bio",
+                  ),
                 ),
               ),
               SizedBox(
@@ -128,16 +139,16 @@ class UserDetail extends StatelessWidget {
               ),
               Container(
                 child: Obx(
-                  () => _userDetailControler.isSavingNote.value
+                  () => _listUsersController.isSavingNote.value
                       ? CircularProgressIndicator()
                       : TextButton(
                           onPressed:
-                              (_userDetailControler.isNoteMatchWithDB.value)
+                              (_listUsersController.isNoteMatchWithDB.value)
                                   ? null
-                                  : _userDetailControler.saveNoteInDB,
+                                  : _saveNote,
                           child: Text(
-                            (_userDetailControler.userNote.value.length > 0 &&
-                                    _userDetailControler
+                            (currentuser.note.length > 0 &&
+                                    _listUsersController
                                         .isNoteMatchWithDB.value)
                                 ? "Saved"
                                 : "Save",

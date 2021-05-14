@@ -4,6 +4,7 @@ import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:get/get.dart';
 
 class CheckNetwork {
+  // ignore: cancel_subscriptions
   StreamSubscription<DataConnectionStatus> listener;
   var internetStatus = "Unknown";
   var contentmessage = "Unknown";

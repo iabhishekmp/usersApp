@@ -9,8 +9,8 @@ import '../models/user.dart';
 class ListUsersController extends GetxController {
   HttpService _dio = HttpService();
   UsersDBHelper dbClient = UsersDBHelper();
-  var usersList = <User>[].obs;
 
+  var usersList = <User>[].obs;
   @override
   void onInit() {
     CheckNetwork().checkConnection();
@@ -69,5 +69,39 @@ class ListUsersController extends GetxController {
       return true;
     }
     return false;
+  }
+
+  var userNote = "".obs;
+  var isSavingNote = false.obs;
+  var isLoadingNote = false.obs;
+  var isNoteMatchWithDB = true.obs;
+  var noteFromDB = "";
+
+  void updateUserNote(String note) {
+    userNote.value = note;
+    if (note != noteFromDB)
+      isNoteMatchWithDB.value = false;
+    else
+      isNoteMatchWithDB.value = true;
+  }
+
+  void saveNoteInDB(String id) async {
+    isSavingNote.value = true;
+    await dbClient.saveNote(userNote.value, id);
+    isSavingNote.value = false;
+    noteFromDB = userNote.value;
+    isNoteMatchWithDB.value = true;
+    var index = usersList.indexWhere((element) => element.id == id);
+    var obj = usersList[index];
+    usersList[index] = User(obj.id, obj.email, obj.firstName, obj.lastName,
+        obj.createdAt, obj.updatedAt, userNote.value);
+  }
+
+  Future<void> getNoteFromDB(String id) async {
+    isLoadingNote.value = true;
+    noteFromDB = await dbClient.getNote(id);
+    userNote.value = noteFromDB;
+    isNoteMatchWithDB.value = true;
+    isLoadingNote.value = false;
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:users_app/controller/list_users_controller.dart';
+// import 'package:users_app/controller/user_detail_controller.dart';
 import 'package:users_app/my_routes.dart';
 
 class Home extends StatefulWidget {
@@ -57,7 +58,7 @@ class _HomeState extends State<Home> {
                               " " +
                               (currentUser.lastName ?? ""),
                         ),
-                        subtitle: Text(currentUser.email ?? ""),
+                        subtitle: Text(currentUser.note),
                       );
                     },
                   ),

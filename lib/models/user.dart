@@ -20,6 +20,7 @@ class User {
     this.lastName,
     this.createdAt,
     this.updatedAt,
+    this.note,
   );
 
   @JsonKey(name: "id")
@@ -39,6 +40,9 @@ class User {
 
   @JsonKey(name: "updated_at")
   final DateTime updatedAt;
+
+  @JsonKey(name: "note")
+  final String note;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
   Map<String, dynamic> toJson() => _$UserToJson(this);
