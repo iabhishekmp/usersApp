@@ -147,7 +147,7 @@ class _UserDetailState extends State<UserDetail> {
                                   ? null
                                   : _saveNote,
                           child: Text(
-                            (currentuser.note.length > 0 &&
+                            (_listUsersController.userNote.value.length > 0 &&
                                     _listUsersController
                                         .isNoteMatchWithDB.value)
                                 ? "Saved"

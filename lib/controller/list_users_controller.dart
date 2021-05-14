@@ -64,8 +64,8 @@ class ListUsersController extends GetxController {
   Future<bool> addMoreData() async {
     List<User> newData = await _apiGetUsersList();
     if (newData.length != 0) {
-      usersList.addAll(newData);
       dbClient.save(newData);
+      usersList.addAll(newData);
       return true;
     }
     return false;

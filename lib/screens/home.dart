@@ -1,3 +1,4 @@
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:users_app/controller/list_users_controller.dart';
@@ -15,10 +16,11 @@ class _HomeState extends State<Home> {
       Get.put(ListUsersController());
 
   void _pagination() async {
-    setState(() {
-      isLoading = true;
-    });
-    await _listUsersController.addMoreData();
+    print("myLog: pagination called!!");
+    var connection = await DataConnectionChecker().hasConnection;
+    if (connection) {
+      await _listUsersController.addMoreData();
+    }
     setState(() {
       isLoading = false;
     });
@@ -27,7 +29,11 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      drawer: Drawer(),
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.black),
+        title: TextField(),
+      ),
       body: Obx(
         () => Container(
           child: NotificationListener<ScrollNotification>(
@@ -36,7 +42,11 @@ class _HomeState extends State<Home> {
               if (!isLoading &&
                   scrollInfo.metrics.pixels ==
                       scrollInfo.metrics.maxScrollExtent) {
+                setState(() {
+                  isLoading = true;
+                });
                 _pagination();
+                print("pagination calling....");
               }
             },
             child: Column(
