@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:users_app/DBHelper/users_db_helper.dart';
+import 'package:users_app/check_network.dart';
 import 'package:users_app/http_service.dart';
 import 'package:users_app/models/list_users.dart';
 import '../models/user.dart';
@@ -8,13 +9,19 @@ import '../models/user.dart';
 class ListUsersController extends GetxController {
   HttpService _dio = HttpService();
   UsersDBHelper dbClient = UsersDBHelper();
-
   var usersList = <User>[].obs;
 
   @override
   void onInit() {
+    CheckNetwork().checkConnection();
     _onInitFunc();
     super.onInit();
+  }
+
+  @override
+  void onClose() {
+    CheckNetwork().listener.cancel();
+    super.onClose();
   }
 
   void _onInitFunc() async {
@@ -47,7 +54,7 @@ class ListUsersController extends GetxController {
     var resp = await _dio.getRequest('/users', sinceCount).catchError((err) {
       Get.snackbar('Error occure', "Someting wrong with the backend!");
     });
-    if (resp.statusCode == 200) {
+    if (resp != null && resp.statusCode == 200) {
       final result = ListUsers.fromJson(resp.data).usersList;
       return result;
     }

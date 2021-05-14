@@ -24,6 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
+  data_connection_checker: ^0.3.4
   dio: ^4.0.0
   get: ^4.1.4
   intl: ^0.17.0
